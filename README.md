@@ -17,8 +17,11 @@ Predictions can be made by adjusting the AIWC feature space, for instance of the
 
 `
 x <- test_dat[1,] #make just one prediction by taking the first row of AIWC entries
+
 x$device <- 'gtx1080' #change the AIWC feature space -- in this instance by changing the device from xeon_es-2697v2 to gtx1080
+
 y <- predict(rgd.aiwc,type='response',data=x) #make a prediction
+
 y$predictions #see the prediction for a CPU device
 `
 
