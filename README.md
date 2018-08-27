@@ -49,6 +49,12 @@ Dependencies
 
 * R -- installed with `apt install r-base`
 * ranger -- installed with `R CMD INSTALL ranger`
+* git-lsf -- installed with:
+
+    wget https://github.com/git-lfs/git-lfs/releases/download/v2.5.1/git-lfs-linux-amd64-v2.5.1.tar.gz \
+    tar -xvf git-lfs-linux-amd64-v2.5.1.tar.gz\
+    ./install.sh\
+    git lfs install
 
 Questions?
 ----------
