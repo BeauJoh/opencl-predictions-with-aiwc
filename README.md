@@ -6,8 +6,7 @@ These are the artefacts associated with the paper "OpenCL Performance Prediction
 This artefact optionally uses binder -- automatic cloud hosting of Jupyter workbooks with support for docker.
 So if you want to avoid all the steps mentioned below, simply click the binder badge.
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/BeauJoh/opencl-predictions-with-aiwc/master/OpenCL\ Performance\ Prediction\ using\ Architecture-Independent\ Features.ipynb
-)
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/BeauJoh/opencl-predictions-with-aiwc/master)
 
 # Installation
 
