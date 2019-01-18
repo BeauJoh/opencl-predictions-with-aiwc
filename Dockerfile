@@ -72,23 +72,32 @@ RUN make install
 
 # Install R and model dependencies
 RUN apt-get install --no-install-recommends -y dirmngr gpg-agent
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
 #RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-RUN add-apt-repository 'deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu xenial/'
-RUN apt-get update
-RUN apt-get install --no-install-recommends -y r-base libcurl4-openssl-dev libssl-dev r-cran-rcppeigen liblapack-dev libblas-dev libgfortran-5-dev
-RUN Rscript -e "install.packages('devtools',repos = 'http://cran.us.r-project.org');"
+#RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E084DAB9
+#RUN add-apt-repository ppa:marutter/rdev
+#RUN apt-get update
+#RUN apt-get -y upgrade
+RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+RUN apt-get -y --no-install-recommends update
+RUN apt-get -y --no-install-recommends install r-base-dev r-base-core r-recommended
+RUN apt-get install -t bionic -y libcurl4-openssl-dev 
+RUN apt-get install -t bionic -y libssl-dev
+RUN Rscript -e "install.packages('devtools')"
 RUN Rscript -e "devtools::install_github('imbs-hl/ranger')"
+
 # Install the git-lsf module
-WORKDIR /downloads
-RUN wget https://github.com/git-lfs/git-lfs/releases/download/v2.5.1/git-lfs-linux-amd64-v2.5.1.tar.gz
-RUN mkdir $GIT_LSF
-RUN tar -xvf git-lfs-linux-amd64-v2.5.1.tar.gz --directory $GIT_LSF
-WORKDIR $GIT_LSF
-RUN ./install.sh
-RUN git lfs install
-# Install the R model
-RUN git clone https://github.com/BeauJoh/opencl-predictions-with-aiwc.git $PREDICTIONS
+#WORKDIR /downloads
+#RUN wget https://github.com/git-lfs/git-lfs/releases/download/v2.5.1/git-lfs-linux-amd64-v2.5.1.tar.gz
+#RUN mkdir $GIT_LSF
+#RUN tar -xvf git-lfs-linux-amd64-v2.5.1.tar.gz --directory $GIT_LSF
+#WORKDIR $GIT_LSF
+#RUN ./install.sh
+#RUN git lfs install
+#
+## Install the R model
+#RUN git clone https://github.com/BeauJoh/opencl-predictions-with-aiwc.git $PREDICTIONS
 
 # Install beakerx
 RUN apt-get install --no-install-recommends -y python3-pip python3-setuptools python3-dev libreadline-dev libpcre3-dev libbz2-dev liblzma-dev libicu-dev
@@ -105,8 +114,11 @@ RUN Rscript -e "devtools::install_github('IRkernel/IRkernel')"\
     && Rscript -e "devtools::install_github('tidyverse/tidyr')"\
     && Rscript -e "devtools::install_github('BeauJoh/fmsb')"\
     && Rscript -e "devtools::install_github('wilkelab/cowplot')"\
-    && Rscript -e "devtools::install_github('cran/gridGraphics')"
-
+    && Rscript -e "devtools::install_github('cran/gridGraphics')"\
+    && Rscript -e "devtools::install_github('cran/Metrics')"\
+    && Rscript -e "devtools::install_github('cran/latex2exp')"\
+    && Rscript -e "devtools::install_github('cran/akima')"\
+    && Rscript -e "devtools::install_github('cran/pander')"
 RUN beakerx install
 
 # Install LetMeKnow
@@ -115,15 +127,15 @@ RUN pip3 install -U 'lmk==0.0.14'
 # is used as: python3 ../opendwarf_grinder.py 2>&1 | lmk -
 # or: lmk 'python3 ../opendwarf_grinder.py'
 
-# Install EOD
-RUN apt-get install --no-install-recommends -y automake autoconf libtool
-RUN git clone https://github.com/BeauJoh/OpenDwarfs.git $EOD
-WORKDIR $EOD
-RUN ./autogen.sh
-RUN mkdir build
-WORKDIR $EOD/build
-RUN ../configure --with-libscibench=$LSB
-RUN make
+## Install EOD
+#RUN apt-get install --no-install-recommends -y automake autoconf libtool
+#RUN git clone https://github.com/BeauJoh/OpenDwarfs.git $EOD
+#WORKDIR $EOD
+#RUN ./autogen.sh
+#RUN mkdir build
+#WORKDIR $EOD/build
+#RUN ../configure --with-libscibench=$LSB
+#RUN make
 
 CMD ["/bin/bash"]
 
@@ -137,14 +149,14 @@ RUN adduser --disabled-password \
     ${NB_USER}
 
 #change ownership of all projects needed for investigation
-RUN chown -R ${NB_UID} ${EOD}
+#RUN chown -R ${NB_UID} ${EOD}
+#RUN chown -R ${NB_UID} ${PREDICTIONS}
 RUN chown -R ${NB_UID} ${LSB}
 RUN chown -R ${NB_UID} ${LEVELDB_ROOT}
 RUN chown -R ${NB_UID} ${OCLGRIND}
-RUN chown -R ${NB_UID} ${PREDICTIONS}
 
-COPY . /aiwc-evaluation
-WORKDIR /aiwc-evaluation
+COPY . /workspace
+WORKDIR /workspace
 ENV LD_LIBRARY_PATH "${OCLGRIND}/lib:${LSB}/lib:${LD_LIBRARYPATH}"
 ENV PATH "${PATH}:${OCLGRIND}/bin}"
 
