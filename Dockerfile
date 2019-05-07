@@ -102,7 +102,8 @@ RUN Rscript -e "devtools::install_github('imbs-hl/ranger')"
 # Install beakerx
 RUN apt-get install --no-install-recommends -y python3-pip python3-setuptools python3-dev libreadline-dev libpcre3-dev libbz2-dev liblzma-dev libicu-dev
 RUN pip3 install --upgrade pip
-RUN pip3 install tzlocal rpy2 requests beakerx
+RUN pip3 install --ignore-installed pyzmq
+RUN pip3 install tzlocal rpy2 requests ipywidgets beakerx pandas py4j
 
 # Install R module for beakerx
 RUN Rscript -e "devtools::install_github('IRkernel/IRkernel')"\
@@ -117,49 +118,49 @@ RUN Rscript -e "devtools::install_github('IRkernel/IRkernel')"\
     && Rscript -e "devtools::install_github('cran/gridGraphics')"\
     && Rscript -e "devtools::install_github('cran/Metrics')"\
     && Rscript -e "devtools::install_github('cran/latex2exp')"\
-    && Rscript -e "devtools::install_github('cran/akima')"\
+    && Rscript -e "devtools::install_github('cran/akima')" \
     && Rscript -e "devtools::install_github('cran/pander')"
 RUN beakerx install
 
 # Install LetMeKnow
-RUN pip3 install -U 'lmk==0.0.14'
-# setup lmk by copying or add .lmkrc to /root/
-# is used as: python3 ../opendwarf_grinder.py 2>&1 | lmk -
-# or: lmk 'python3 ../opendwarf_grinder.py'
-
-## Install EOD
-#RUN apt-get install --no-install-recommends -y automake autoconf libtool
-#RUN git clone https://github.com/BeauJoh/OpenDwarfs.git $EOD
-#WORKDIR $EOD
-#RUN ./autogen.sh
-#RUN mkdir build
-#WORKDIR $EOD/build
-#RUN ../configure --with-libscibench=$LSB
-#RUN make
-
-CMD ["/bin/bash"]
-
-ENV NB_USER jovyan
-ENV NB_UID 1000
-ENV HOME /home/${NB_USER}
-
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
-
-#change ownership of all projects needed for investigation
-#RUN chown -R ${NB_UID} ${EOD}
-#RUN chown -R ${NB_UID} ${PREDICTIONS}
-RUN chown -R ${NB_UID} ${LSB}
-RUN chown -R ${NB_UID} ${LEVELDB_ROOT}
-RUN chown -R ${NB_UID} ${OCLGRIND}
-
-COPY . /workspace
-WORKDIR /workspace
-ENV LD_LIBRARY_PATH "${OCLGRIND}/lib:${LSB}/lib:${LD_LIBRARYPATH}"
-ENV PATH "${PATH}:${OCLGRIND}/bin}"
-
-#start beakerx/jupyter by default
-#CMD ["beakerx", "--allow-root"]
-CMD ["/bin/bash"]
+#RUN pip3 install -U 'lmk==0.0.14'
+## setup lmk by copying or add .lmkrc to /root/
+## is used as: python3 ../opendwarf_grinder.py 2>&1 | lmk -
+## or: lmk 'python3 ../opendwarf_grinder.py'
+#
+### Install EOD
+##RUN apt-get install --no-install-recommends -y automake autoconf libtool
+##RUN git clone https://github.com/BeauJoh/OpenDwarfs.git $EOD
+##WORKDIR $EOD
+##RUN ./autogen.sh
+##RUN mkdir build
+##WORKDIR $EOD/build
+##RUN ../configure --with-libscibench=$LSB
+##RUN make
+#
+#CMD ["/bin/bash"]
+#
+#ENV NB_USER jovyan
+#ENV NB_UID 1000
+#ENV HOME /home/${NB_USER}
+#
+#RUN adduser --disabled-password \
+#    --gecos "Default user" \
+#    --uid ${NB_UID} \
+#    ${NB_USER}
+#
+##change ownership of all projects needed for investigation
+##RUN chown -R ${NB_UID} ${EOD}
+##RUN chown -R ${NB_UID} ${PREDICTIONS}
+#RUN chown -R ${NB_UID} ${LSB}
+#RUN chown -R ${NB_UID} ${LEVELDB_ROOT}
+#RUN chown -R ${NB_UID} ${OCLGRIND}
+#
+#COPY . /workspace
+#WORKDIR /workspace
+#ENV LD_LIBRARY_PATH "${OCLGRIND}/lib:${LSB}/lib:${LD_LIBRARYPATH}"
+#ENV PATH "${PATH}:${OCLGRIND}/bin}"
+#
+##start beakerx/jupyter by default
+##CMD ["beakerx", "--allow-root"]
+#CMD ["/bin/bash"]
