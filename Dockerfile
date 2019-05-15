@@ -123,32 +123,32 @@ RUN Rscript -e "devtools::install_github('IRkernel/IRkernel')"\
 RUN beakerx install
 
 # Install LetMeKnow
-#RUN pip3 install -U 'lmk==0.0.14'
-## setup lmk by copying or add .lmkrc to /root/
-## is used as: python3 ../opendwarf_grinder.py 2>&1 | lmk -
-## or: lmk 'python3 ../opendwarf_grinder.py'
-#
-### Install EOD
-##RUN apt-get install --no-install-recommends -y automake autoconf libtool
-##RUN git clone https://github.com/BeauJoh/OpenDwarfs.git $EOD
-##WORKDIR $EOD
-##RUN ./autogen.sh
-##RUN mkdir build
-##WORKDIR $EOD/build
-##RUN ../configure --with-libscibench=$LSB
-##RUN make
-#
-#CMD ["/bin/bash"]
-#
-#ENV NB_USER jovyan
-#ENV NB_UID 1000
-#ENV HOME /home/${NB_USER}
-#
-#RUN adduser --disabled-password \
-#    --gecos "Default user" \
-#    --uid ${NB_UID} \
-#    ${NB_USER}
-#
+RUN pip3 install -U 'lmk==0.0.14'
+# setup lmk by copying or add .lmkrc to /root/
+# is used as: python3 ../opendwarf_grinder.py 2>&1 | lmk -
+# or: lmk 'python3 ../opendwarf_grinder.py'
+
+# Install EOD
+RUN apt-get install --no-install-recommends -y automake autoconf libtool
+RUN git clone https://github.com/BeauJoh/OpenDwarfs.git $EOD
+WORKDIR $EOD
+RUN ./autogen.sh
+RUN mkdir build
+WORKDIR $EOD/build
+RUN ../configure --with-libscibench=$LSB
+RUN make
+
+CMD ["/bin/bash"]
+
+ENV NB_USER jovyan
+ENV NB_UID 1000
+ENV HOME /home/${NB_USER}
+
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER}
+
 ##change ownership of all projects needed for investigation
 ##RUN chown -R ${NB_UID} ${EOD}
 ##RUN chown -R ${NB_UID} ${PREDICTIONS}
