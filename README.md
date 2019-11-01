@@ -3,6 +3,49 @@ OpenCL Performance Prediction using Architecture-Independent Features
 
 These are the artefacts associated with the paper "OpenCL Performance Prediction using Architecture-Independent Features" published in the proceedings for The 2018 International Conference on High Performance Computing & Simulation (HPCS 2018) in the International Workshop on High Performance and Dynamic Reconfigurable Systems and Networks (DRSN-2018) and was presented in Orleans, France 16-20 July 2018.
 
+This artefact optionally uses binder -- automatic cloud hosting of Jupyter workbooks with support for docker.
+So if you want to avoid all the steps mentioned below, simply click the binder badge.
+
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/BeauJoh/opencl-predictions-with-aiwc/master)
+
+# Installation
+
+This project uses Docker to facilitate reproducibility. As such, it has the following dependencies:
+
+* Docker -- available [here](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+
+Optional Dependencies:
+
+* Cuda 9.0 Runtime -- available [here](https://developer.nvidia.com/cuda-downloads)
+* nvidia-docker2, install instructions found [here](https://github.com/NVIDIA/nvidia-docker)
+* Docker nvidia container, installed with: `sudo apt install nvidia-container-runtime`
+
+# Build
+
+To generate a docker image named aiwc-prediction, run:
+
+`docker build -t aiwc-prediction .`
+
+# Run
+
+To start the docker image run:
+
+```
+docker run --runtime=nvidia -it --mount src=`pwd`,target=/workspace,type=bind -p 8888:8888 --net=host aiwc-prediction
+```
+
+For reproducibility, BeakerX has also been added for replicating results and for the transparency of analysis.
+To evaluate the artefact, launch jupyter with:
+
+`beakerx --allow-root`
+
+from within the container and following the prompts to access it from the website front-end.
+
+*Note* that if this node is accessed from an ssh session local ssh port forwarding is required and is achieved with the following:
+
+`ssh -N -f -L localhost:8888:localhost:8888 <node-name>`
+
+
 Reproducibility
 ---------------
 
