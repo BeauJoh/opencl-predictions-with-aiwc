@@ -75,12 +75,13 @@ python extract.py
 
 The run-time data are extracted with:
 
-`
-cd data/time_data
-git lfs install
-git lfs pull
-tar -xvf paper_times.tar
-`
+~~~~
+    cd data/time_data
+    git lfs install
+    git lfs pull
+    bzip2 -dk paper_times.tar.bz2
+    tar -xvf paper_times.tar
+~~~~
 or, to use the latest (thesis version) of the data:
 `
 tar -xvf thesis_times.tar
