@@ -138,6 +138,13 @@ WORKDIR $EOD/build
 RUN ../configure --with-libscibench=$LSB
 RUN make
 
+# Install git-lfs
+WORKDIR /git-lfs
+RUN wget https://github.com/git-lfs/git-lfs/releases/download/v2.5.1/git-lfs-linux-amd64-v2.5.1.tar.gz
+RUN tar -xvf git-lfs-linux-amd64-v2.5.1.tar.gz
+RUN ./install.sh
+RUN git lfs install
+
 CMD ["/bin/bash"]
 
 ENV NB_USER jovyan
@@ -157,7 +164,7 @@ RUN adduser --disabled-password \
 #RUN chown -R ${NB_UID} ${OCLGRIND}
 #
 #COPY . /workspace
-#WORKDIR /workspace
+WORKDIR /workspace
 #ENV LD_LIBRARY_PATH "${OCLGRIND}/lib:${LSB}/lib:${LD_LIBRARYPATH}"
 #ENV PATH "${PATH}:${OCLGRIND}/bin}"
 #

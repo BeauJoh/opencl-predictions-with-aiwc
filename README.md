@@ -77,8 +77,15 @@ The run-time data are extracted with:
 
 `
 cd data/time_data
-tar -xvf all_times.tar
+git lfs install
+git lfs pull
+tar -xvf paper_times.tar
 `
+or, to use the latest (thesis version) of the data:
+`
+tar -xvf thesis_times.tar
+`
+The thesis version contains repeats_to_two_seconds collected with LibSciBench (LSB).
 
 Finally, the data manipulations to bind the AIWC metrics -- predictor variables -- to the collected runtime results -- response variables -- and a sub-sampling is achieved by then launching `R`, in the `codes` directory, and executing the following R command:
 
